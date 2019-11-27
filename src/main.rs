@@ -7,12 +7,13 @@ pub mod snake;
 use snake::grid::Grid;
 use snake::segments::Snake;
 use snake::segments::Direction;
+use snake::constants::{GRID_COLS, GRID_ROWS, CELL_WIDTH, CELL_HEIGHT, START_X, START_Y};
 
 fn main() {
-    let (mut canvas, mut events) = snake::init(1024, 768);
-    let mut field = Grid::new(32, 24);
-    let mut snake = Snake::new(16, 12);
-    let mut food = (10_u32, 10_u32);
+    let (mut canvas, mut events) = snake::init(GRID_COLS * CELL_WIDTH, GRID_ROWS * CELL_HEIGHT);
+    let mut field = Grid::new(GRID_COLS as usize, GRID_ROWS as usize);
+    let mut snake = Snake::new(START_X, START_Y);
+    let mut food = (START_X - 3, START_Y);
 
     let duration_until_randomize = Duration::from_millis(200);
     let duration_until_move = Duration::from_millis(200);

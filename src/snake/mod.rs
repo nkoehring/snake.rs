@@ -3,6 +3,7 @@ use sdl2::pixels::Color;
 use sdl2::render::Canvas;
 use sdl2::EventPump;
 
+pub mod constants;
 pub mod grid;
 pub mod segments;
 
