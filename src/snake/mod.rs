@@ -6,8 +6,6 @@ use sdl2::EventPump;
 pub mod grid;
 pub mod segments;
 
-pub enum Action { Quit, Loose, Grow }
-
 pub fn init(width: u32, height: u32) -> (Canvas<Window>, EventPump) {
     let sdl_context = sdl2::init().unwrap();
     let video_subsystem = sdl_context.video().unwrap();

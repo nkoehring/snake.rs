@@ -1,5 +1,4 @@
 use std::collections::VecDeque;
-// use super::Action;
 
 pub enum Direction { North, East, South, West }
 pub struct Snake {
