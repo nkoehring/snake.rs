@@ -14,15 +14,16 @@ pub struct Grid {
 
 impl Grid {
     pub fn new (n_cols: usize, n_rows: usize) -> Grid {
-        let mut grid_vec = Vec::with_capacity(n_rows as usize);
+        let mut grid_vec = Vec::with_capacity(n_cols as usize);
 
-        for row in 0..n_rows {
-            grid_vec.push(Vec::with_capacity(n_cols as usize));
+        for row in 0..n_cols {
+            grid_vec.push(Vec::with_capacity(n_rows as usize));
 
-            for _col in 0..n_cols {
+            for _col in 0..n_rows {
                 grid_vec[row].push(Color::RGB(35_u8, 15_u8, 13_u8));
             }
         }
+
         Grid { cells: grid_vec, max_x: n_cols - 1, max_y: n_rows - 1 }
     }
 
