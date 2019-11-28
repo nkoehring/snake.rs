@@ -14,21 +14,18 @@ use snake::constants::{
     CELL_HEIGHT,
     START_X,
     START_Y,
-    RANDOMIZE_DELAY,
     MOVEMENT_DELAY,
 };
 
 fn main() {
     let (mut canvas, mut events) = snake::init(GRID_COLS * CELL_WIDTH, GRID_ROWS * CELL_HEIGHT);
-    let mut field = Grid::new(GRID_COLS as usize, GRID_ROWS as usize);
+    let field = Grid::new(GRID_COLS as usize, GRID_ROWS as usize);
     let mut snake = Snake::new(START_X, START_Y);
     let mut food = (START_X - 3, START_Y);
 
-    let duration_until_randomize = Duration::from_millis(RANDOMIZE_DELAY);
     let mut duration_until_move = Duration::from_millis(MOVEMENT_DELAY);
     let duration_until_draw = Duration::from_millis(33);
 
-    let mut time_since_randomize = Instant::now();
     let mut time_since_move = Instant::now();
     let mut time_since_draw = Instant::now();
 
@@ -45,11 +42,6 @@ fn main() {
                 Event::KeyDown { keycode: Some(Keycode::Left), .. } => snake.direction = Direction::West,
                 _ => continue,
             }
-        }
-
-        if time_since_randomize.elapsed() >= duration_until_randomize {
-            field.randomize();
-            time_since_randomize = Instant::now();
         }
 
         if time_since_move.elapsed() >= duration_until_move {

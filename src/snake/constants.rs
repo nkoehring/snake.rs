@@ -8,4 +8,5 @@ pub const START_X: u32 = 16;
 pub const START_Y: u32 = 12;
 
 pub const MOVEMENT_DELAY: u64 = 300;
-pub const RANDOMIZE_DELAY: u64 = 200;
+
+pub const BACKGROUND: (u8, u8, u8) = (0, 0, 0);
