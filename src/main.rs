@@ -7,7 +7,16 @@ pub mod snake;
 use snake::grid::Grid;
 use snake::segments::Snake;
 use snake::segments::Direction;
-use snake::constants::{GRID_COLS, GRID_ROWS, CELL_WIDTH, CELL_HEIGHT, START_X, START_Y};
+use snake::constants::{
+    GRID_COLS,
+    GRID_ROWS,
+    CELL_WIDTH,
+    CELL_HEIGHT,
+    START_X,
+    START_Y,
+    RANDOMIZE_DELAY,
+    MOVEMENT_DELAY,
+};
 
 fn main() {
     let (mut canvas, mut events) = snake::init(GRID_COLS * CELL_WIDTH, GRID_ROWS * CELL_HEIGHT);
@@ -15,8 +24,8 @@ fn main() {
     let mut snake = Snake::new(START_X, START_Y);
     let mut food = (START_X - 3, START_Y);
 
-    let duration_until_randomize = Duration::from_millis(200);
-    let duration_until_move = Duration::from_millis(200);
+    let duration_until_randomize = Duration::from_millis(RANDOMIZE_DELAY);
+    let mut duration_until_move = Duration::from_millis(MOVEMENT_DELAY);
     let duration_until_draw = Duration::from_millis(33);
 
     let mut time_since_randomize = Instant::now();
@@ -46,7 +55,9 @@ fn main() {
         if time_since_move.elapsed() >= duration_until_move {
             let grow = snake.touches(&food);
             if grow {
+                let speedup = (snake.segments.len() * 10) as u64;
                 food = field.random_cell_outside(&snake);
+                duration_until_move = Duration::from_millis(MOVEMENT_DELAY - speedup);
             }
 
             let crawled = snake.crawl(grow);
