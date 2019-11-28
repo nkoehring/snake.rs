@@ -4,7 +4,7 @@ use sdl2::render::Canvas;
 use sdl2::pixels::Color;
 use sdl2::rect::Rect;
 
-use super::constants::BACKGROUND;
+use super::constants::{BACKGROUND, GRID_COLS, GRID_ROWS};
 use super::segments::Snake;
 
 pub struct Grid {
@@ -53,7 +53,11 @@ impl Grid {
     }
 
     pub fn random_cell_outside (&self, snake: &Snake) -> (u32, u32) {
-        // TODO: think about the case when all fields are full of snake
+        if snake.segments.len() >= (GRID_ROWS * GRID_COLS) as usize {
+            // field's full of snake, no space for food
+            return (0, 0);
+        }
+
         let h = self.max_x as u32;
         let w = self.max_y as u32;
         let cell = (
