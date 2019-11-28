@@ -1,4 +1,5 @@
 use std::collections::VecDeque;
+use super::constants::{GRID_COLS, GRID_ROWS};
 
 pub enum Direction { North, East, South, West }
 pub struct Snake {
@@ -42,21 +43,29 @@ impl Snake {
 
     fn head_north (&mut self) -> (u32, u32) {
         let old_head = self.segments.front().expect("never empty");
-        (old_head.0, old_head.1 - 1)
+        if old_head.1 > 0 {
+            (old_head.0, old_head.1 - 1)
+        } else {
+            (old_head.0, GRID_ROWS - 1)
+        }
     }
 
     fn head_east (&mut self) -> (u32, u32) {
         let old_head = self.segments.front().expect("never empty");
-        (old_head.0 + 1, old_head.1)
+        ((old_head.0 + 1) % GRID_COLS, old_head.1)
     }
 
     fn head_south (&mut self) -> (u32, u32) {
         let old_head = self.segments.front().expect("never empty");
-        (old_head.0, old_head.1 + 1)
+        (old_head.0, (old_head.1 + 1) % GRID_ROWS)
     }
 
     fn head_west (&mut self) -> (u32, u32) {
         let old_head = self.segments.front().expect("never empty");
-        (old_head.0 - 1, old_head.1)
+        if old_head.0 > 0 {
+            (old_head.0 - 1, old_head.1)
+        } else {
+            (GRID_COLS - 1, old_head.1)
+        }
     }
 }
