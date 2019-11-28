@@ -27,9 +27,9 @@ impl Grid {
         Grid { cells: grid_vec, max_x: n_cols - 1, max_y: n_rows - 1 }
     }
 
-    fn draw_cell(&self, renderer: &mut Canvas<Window>, row: u32, col: u32, w: u32, h: u32) {
-        let x = (row * w) as i32;
-        let y = (col * h) as i32;
+    fn draw_cell(&self, renderer: &mut Canvas<Window>, col: u32, row: u32, w: u32, h: u32) {
+        let x = (col * w) as i32;
+        let y = (row * h) as i32;
         let rect = Rect::new(x, y, w, h);
         renderer.set_draw_color(self.cells[col as usize][row as usize]);
         renderer.fill_rect(rect).expect("draw_cell failed!");
