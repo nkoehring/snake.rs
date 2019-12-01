@@ -15,6 +15,7 @@ use snake::constants::{
     START_X,
     START_Y,
     MOVEMENT_DELAY,
+    MAX_SPEEDUP,
 };
 
 fn main() {
@@ -47,9 +48,13 @@ fn main() {
         if time_since_move.elapsed() >= duration_until_move {
             let grow = snake.touches(&food);
             if grow {
-                let speedup = (snake.segments.len() * 10) as u64;
+                let speedup = snake.segments.len() * 10;
+
+                if speedup < MAX_SPEEDUP {
+                    duration_until_move = Duration::from_millis(MOVEMENT_DELAY - (speedup as u64));
+                }
+
                 food = field.random_cell_outside(&snake);
-                duration_until_move = Duration::from_millis(MOVEMENT_DELAY - speedup);
             }
 
             let crawled = snake.crawl(grow);
