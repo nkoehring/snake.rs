@@ -1,9 +1,9 @@
-use rand;
 use sdl2::video::Window;
 use sdl2::render::Canvas;
 use sdl2::pixels::Color;
 use sdl2::rect::Rect;
 
+use super::toolkit::{rand_rgb, rand_coord};
 use super::constants::{BACKGROUND, GRID_COLS, GRID_ROWS};
 use super::segments::Snake;
 
@@ -11,14 +11,6 @@ pub struct Grid {
     pub max_x: usize,
     pub max_y: usize,
     background_color: Color,
-}
-
-fn random_color() -> Color {
-    Color::RGB(
-        (rand::random::<u8>() / 2) + 127,
-        (rand::random::<u8>() / 2) + 127,
-        (rand::random::<u8>() / 2) + 127,
-    )
 }
 
 impl Grid {
@@ -43,32 +35,24 @@ impl Grid {
         renderer.set_draw_color(self.background_color);
         renderer.clear();
 
-        self.draw_cell(renderer, food.0, food.1, w, h, random_color());
+        self.draw_cell(renderer, food.0, food.1, w, h, rand_rgb());
 
         for segment in &snake.segments {
-            self.draw_cell(renderer, segment.0, segment.1, w, h, random_color());
+            self.draw_cell(renderer, segment.0, segment.1, w, h, rand_rgb());
         }
 
         renderer.present();
     }
 
     pub fn random_cell_outside (&self, snake: &Snake) -> (u32, u32) {
-        if snake.len() >= (GRID_ROWS * GRID_COLS) as usize {
+        let max_len = (GRID_ROWS * GRID_COLS) as usize;
+        if snake.len() >=  max_len {
             // field's full of snake, no space for food
             return (0, 0);
         }
 
-        let h = self.max_x as u32;
-        let w = self.max_y as u32;
-        let cell = (
-            rand::random::<u32>() % (h - 1),
-            rand::random::<u32>() % (w - 1)
-        );
-
-        if snake.segments.contains(&cell) {
-            self.random_cell_outside(snake)
-        } else {
-            cell
-        }
+        let h = (self.max_x - 1) as u32;
+        let w = (self.max_y - 1) as u32;
+        rand_coord(&(h, w), &|cell| !snake.touches(cell))
     }
 }
