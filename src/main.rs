@@ -48,7 +48,7 @@ fn main() {
         if time_since_move.elapsed() >= duration_until_move {
             let grow = snake.touches(&food);
             if grow {
-                let speedup = snake.segments.len() * 10;
+                let speedup = snake.len() * 10;
 
                 if speedup < MAX_SPEEDUP {
                     duration_until_move = Duration::from_millis(MOVEMENT_DELAY - (speedup as u64));

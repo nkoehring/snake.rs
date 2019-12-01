@@ -53,7 +53,7 @@ impl Grid {
     }
 
     pub fn random_cell_outside (&self, snake: &Snake) -> (u32, u32) {
-        if snake.segments.len() >= (GRID_ROWS * GRID_COLS) as usize {
+        if snake.len() >= (GRID_ROWS * GRID_COLS) as usize {
             // field's full of snake, no space for food
             return (0, 0);
         }

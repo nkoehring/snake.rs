@@ -17,6 +17,10 @@ impl Snake {
         snake
     }
 
+    pub fn len (&self) -> usize {
+        self.segments.len()
+    }
+
     pub fn touches(&self, cell: &(u32, u32)) -> bool {
         self.segments.contains(cell)
     }
