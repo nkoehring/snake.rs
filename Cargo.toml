@@ -1,6 +1,6 @@
 [package]
 name = "rusty-snake"
-version = "0.1.0"
+version = "1.0-pre"
 authors = ["koehr <n@koehr.in>"]
 edition = "2018"
 
