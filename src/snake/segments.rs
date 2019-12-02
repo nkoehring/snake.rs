@@ -1,19 +1,23 @@
 use std::collections::VecDeque;
-use super::constants::{GRID_COLS, GRID_ROWS};
+use crate::config::Config;
 
 pub enum Direction { North, East, South, West }
 pub struct Snake {
     pub segments: VecDeque<(u32, u32)>,
     pub direction: Direction,
+    bound_x: u32,
+    bound_y: u32,
 }
 
 impl Snake {
-    pub fn new (x: u32, y: u32) -> Snake {
+    pub fn new (cfg: &Config) -> Snake {
         let mut snake = Snake {
             segments: VecDeque::new(),
             direction: Direction::North,
+            bound_x: cfg.grid_cols,
+            bound_y: cfg.grid_rows
         };
-        snake.segments.push_front((x, y));
+        snake.segments.push_front(cfg.start_as_coords());
         snake
     }
 
@@ -50,18 +54,18 @@ impl Snake {
         if old_head.1 > 0 {
             (old_head.0, old_head.1 - 1)
         } else {
-            (old_head.0, GRID_ROWS - 1)
+            (old_head.0, self.bound_y - 1)
         }
     }
 
     fn head_east (&mut self) -> (u32, u32) {
         let old_head = self.segments.front().expect("never empty");
-        ((old_head.0 + 1) % GRID_COLS, old_head.1)
+        ((old_head.0 + 1) % self.bound_x, old_head.1)
     }
 
     fn head_south (&mut self) -> (u32, u32) {
         let old_head = self.segments.front().expect("never empty");
-        (old_head.0, (old_head.1 + 1) % GRID_ROWS)
+        (old_head.0, (old_head.1 + 1) % self.bound_y)
     }
 
     fn head_west (&mut self) -> (u32, u32) {
@@ -69,7 +73,7 @@ impl Snake {
         if old_head.0 > 0 {
             (old_head.0 - 1, old_head.1)
         } else {
-            (GRID_COLS - 1, old_head.1)
+            (self.bound_x - 1, old_head.1)
         }
     }
 }

@@ -1,31 +1,29 @@
+use std::default::Default;
 use std::thread::sleep;
 use std::time::{Duration, Instant};
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 
-pub mod snake;
+mod config;
+mod window;
+mod snake;
+
+use config::Config;
+
 use snake::grid::Grid;
 use snake::segments::Snake;
 use snake::segments::Direction;
-use snake::constants::{
-    GRID_COLS,
-    GRID_ROWS,
-    CELL_WIDTH,
-    CELL_HEIGHT,
-    START_X,
-    START_Y,
-    MOVEMENT_DELAY,
-    MAX_SPEEDUP,
-};
 
 fn main() {
-    let (mut canvas, mut events) = snake::init(GRID_COLS * CELL_WIDTH, GRID_ROWS * CELL_HEIGHT);
-    let field = Grid::new(GRID_COLS as usize, GRID_ROWS as usize);
-    let mut snake = Snake::new(START_X, START_Y);
-    let mut food = (START_X - 3, START_Y);
+    let cfg: Config = Default::default();
+    let (mut canvas, mut events) = window::init(cfg.win_width(), cfg.win_height());
 
-    let mut duration_until_move = Duration::from_millis(MOVEMENT_DELAY);
-    let duration_until_draw = Duration::from_millis(33);
+    let field = Grid::new(&cfg);
+    let mut snake = Snake::new(&cfg);
+    let mut food = (cfg.start_x - 3, cfg.start_y);
+
+    let mut duration_until_move = cfg.movement_delay_as_duration();
+    let duration_until_redraw = cfg.redraw_delay_as_duration();
 
     let mut time_since_move = Instant::now();
     let mut time_since_draw = Instant::now();
@@ -50,8 +48,8 @@ fn main() {
             if grow {
                 let speedup = snake.len() * 10;
 
-                if speedup < MAX_SPEEDUP {
-                    duration_until_move = Duration::from_millis(MOVEMENT_DELAY - (speedup as u64));
+                if speedup < cfg.max_speedup {
+                    duration_until_move = Duration::from_millis(cfg.movement_delay - (speedup as u64));
                 }
 
                 food = field.random_cell_outside(&snake);
@@ -66,14 +64,14 @@ fn main() {
             time_since_move = Instant::now();
         }
 
-        if time_since_draw.elapsed() >= duration_until_draw {
+        if time_since_draw.elapsed() >= duration_until_redraw {
             field.draw(&mut canvas, &snake, &food);
             time_since_draw = Instant::now();
         }
 
         let elapsed = now.elapsed();
-        if elapsed < duration_until_draw {
-            sleep(duration_until_draw - elapsed);
+        if elapsed < duration_until_redraw {
+            sleep(duration_until_redraw - elapsed);
         }
     }
 }

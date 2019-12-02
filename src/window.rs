@@ -3,11 +3,6 @@ use sdl2::pixels::Color;
 use sdl2::render::Canvas;
 use sdl2::EventPump;
 
-pub mod toolkit;
-pub mod constants;
-pub mod grid;
-pub mod segments;
-
 pub fn init(width: u32, height: u32) -> (Canvas<Window>, EventPump) {
     let sdl_context = sdl2::init().unwrap();
     let video_subsystem = sdl_context.video().unwrap();
@@ -27,4 +22,3 @@ pub fn init(width: u32, height: u32) -> (Canvas<Window>, EventPump) {
     let event_pump = sdl_context.event_pump().unwrap();
     (canvas, event_pump)
 }
-

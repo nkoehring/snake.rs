@@ -4,19 +4,28 @@ use sdl2::pixels::Color;
 use sdl2::rect::Rect;
 
 use super::toolkit::{rand_rgb, rand_coord};
-use super::constants::{BACKGROUND, GRID_COLS, GRID_ROWS};
 use super::segments::Snake;
+use crate::config::Config;
 
 pub struct Grid {
-    pub max_x: usize,
-    pub max_y: usize,
+    cell_width: u32,
+    cell_height: u32,
+    size: usize,
+    max_x: usize,
+    max_y: usize,
     background_color: Color,
 }
 
 impl Grid {
-    pub fn new (n_cols: usize, n_rows: usize) -> Grid {
-        let background_color = Color::RGB(BACKGROUND.0, BACKGROUND.1, BACKGROUND.2);
-        Grid { max_x: n_cols - 1, max_y: n_rows - 1, background_color: background_color }
+    pub fn new (cfg: &Config) -> Grid {
+        Grid {
+            cell_width: cfg.cell_width,
+            cell_height: cfg.cell_height,
+            size: (cfg.grid_rows * cfg.grid_cols) as usize,
+            max_x: (cfg.grid_cols - 1) as usize,
+            max_y: (cfg.grid_rows - 1) as usize,
+            background_color: cfg.background_color_as_rgb(),
+        }
     }
 
     fn draw_cell(&self, renderer: &mut Canvas<Window>, col: u32, row: u32, w: u32, h: u32, color: Color) {
@@ -28,9 +37,8 @@ impl Grid {
     }
 
     pub fn draw(&self, renderer: &mut Canvas<Window>, snake: &Snake, food: &(u32, u32)) {
-        // let (window_width, window_height) = renderer.window.size;
-        let w = 32;
-        let h = 32;
+        let w = self.cell_width;
+        let h = self.cell_height;
 
         renderer.set_draw_color(self.background_color);
         renderer.clear();
@@ -45,8 +53,7 @@ impl Grid {
     }
 
     pub fn random_cell_outside (&self, snake: &Snake) -> (u32, u32) {
-        let max_len = (GRID_ROWS * GRID_COLS) as usize;
-        if snake.len() >=  max_len {
+        if snake.len() >=  self.size {
             // field's full of snake, no space for food
             return (0, 0);
         }
